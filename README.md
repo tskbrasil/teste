@@ -2,7 +2,7 @@
 // ==UserScript==
 // @name         cheat cmsp by iUnknown
 // @namespace    https://cmspweb.ip.tv/
-// @version      3.0
+// @version      3.1
 // @description  cheat cmsp
 // @connect      cmsp.ip.tv
 // @connect      edusp-api.ip.tv
@@ -15,7 +15,7 @@
 (function() {
     'use strict';
 
-    let lesson_regex = /https:\/\/cmsp\.ip\.tv\/mobile\/tms\/task\/\d+\/apply/;
+    let lesson_regex = /https:\/\/cmsp\.ip.tv\/mobile\/tms\/task\/\d+\/apply/;
     console.log("-- cmsp cheat by iUnknown perdeu marcos --");
 
     function transformJson(jsonOriginal) {
@@ -136,7 +136,7 @@
 
                         // Adiciona um botão para alterar a velocidade
                         const speedButton = document.createElement('button');
-                        speedButton.textContent = 'Alterar Tempo de Finalização (ms)';
+                        speedButton.textContent = 'Alterar Tempo de Finalização';
                         speedButton.style.position = 'fixed';
                         speedButton.style.top = '10px';
                         speedButton.style.right = '10px';
@@ -149,14 +149,71 @@
                         document.body.appendChild(speedButton);
 
                         speedButton.onclick = function() {
-                            const newDelay = prompt("Insira o novo tempo de finalização (em milissegundos):", "10000");
-                            if (newDelay !== null && !isNaN(newDelay) && newDelay > 0) {
-                                delay = parseInt(newDelay);
-                                alert(`Tempo de finalização alterado para ${delay} ms.`);
-                            } else {
-                                alert("Por favor, insira um tempo válido.");
-                            }
+                            createModal();
                         };
+
+                        function createModal() {
+                            // Cria a janelinha modal
+                            const modal = document.createElement('div');
+                            modal.style.position = 'fixed';
+                            modal.style.top = '50%';
+                            modal.style.left = '50%';
+                            modal.style.transform = 'translate(-50%, -50%)';
+                            modal.style.zIndex = '10000';
+                            modal.style.backgroundColor = 'white';
+                            modal.style.padding = '20px';
+                            modal.style.borderRadius = '10px';
+                            modal.style.boxShadow = '0 0 10px rgba(0, 0, 0, 0.5)';
+                            modal.style.textAlign = 'center';
+
+                            const modalTitle = document.createElement('h2');
+                            modalTitle.textContent = 'Alterar Tempo de Finalização';
+                            modal.appendChild(modalTitle);
+
+                            const inputField = document.createElement('input');
+                            inputField.type = 'number';
+                            inputField.placeholder = 'Tempo em ms';
+                            inputField.style.width = '100%';
+                            inputField.style.padding = '10px';
+                            modal.appendChild(inputField);
+
+                            const confirmButton = document.createElement('button');
+                            confirmButton.textContent = 'Confirmar';
+                            confirmButton.style.marginTop = '10px';
+                            confirmButton.style.padding = '10px';
+                            confirmButton.style.backgroundColor = '#4CAF50';
+                            confirmButton.style.color = 'white';
+                            confirmButton.style.border = 'none';
+                            confirmButton.style.borderRadius = '5px';
+                            modal.appendChild(confirmButton);
+
+                            const closeButton = document.createElement('button');
+                            closeButton.textContent = 'Cancelar';
+                            closeButton.style.marginTop = '10px';
+                            closeButton.style.padding = '10px';
+                            closeButton.style.backgroundColor = '#f44336';
+                            closeButton.style.color = 'white';
+                            closeButton.style.border = 'none';
+                            closeButton.style.borderRadius = '5px';
+                            modal.appendChild(closeButton);
+
+                            document.body.appendChild(modal);
+
+                            confirmButton.onclick = function() {
+                                const newDelay = parseInt(inputField.value);
+                                if (newDelay > 0) {
+                                    delay = newDelay;
+                                    alert(`Tempo de finalização alterado para ${delay} ms.`);
+                                    document.body.removeChild(modal); // Fecha a modal
+                                } else {
+                                    alert("Por favor, insira um tempo válido.");
+                                }
+                            };
+
+                            closeButton.onclick = function() {
+                                document.body.removeChild(modal); // Fecha a modal
+                            };
+                        }
                     });
                 });
             }
@@ -167,41 +224,6 @@
         childList: true,
         subtree: true
     });
-
-    // Adicionando a telinha preta com texto
-    function createOverlay() {
-        const overlay = document.createElement('div');
-        overlay.style.position = 'fixed';
-        overlay.style.top = '0';
-        overlay.style.left = '0';
-        overlay.style.width = '100%';
-        overlay.style.height = '100%';
-        overlay.style.backgroundColor = 'rgba(0, 0, 0, 0.8)';
-        overlay.style.zIndex = '9999';
-        overlay.style.display = 'flex';
-        overlay.style.justifyContent = 'center';
-        overlay.style.alignItems = 'center';
-        overlay.style.color = 'white';
-        overlay.style.fontSize = '20px';
-        overlay.style.fontFamily = 'Arial, sans-serif';
-        overlay.innerHTML = `
-            <div style="text-align: center;">
-                <p>Entre no nosso Discord!</p>
-                <a href="https://discord.gg/2rqNgcZG66" target="_blank" style="display: inline-block; margin-top: 10px; padding: 10px 20px; background-color: #7289DA; color: white; text-decoration: none; border-radius: 5px;">Acessar Discord</a>
-            </div>
-        `;
-
-        document.body.appendChild(overlay);
-
-        // Fecha a telinha automaticamente após 10 segundos
-        setTimeout(() => {
-            document.body.removeChild(overlay);
-        }, 10000);
-    }
-
-    // Chama a função para criar a telinha
-    createOverlay();
-
 })();
 
 ``` 
