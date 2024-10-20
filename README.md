@@ -117,30 +117,46 @@
 
                         console.log(`[DEBUG] Sending Answers... BODY: ${JSON.stringify(send_anwsers_body)}`);
 
-                        let delay = prompt("Escolha o tempo de atraso (em milissegundos):", "10000");
-                        delay = parseInt(delay);
+                        let delay = 10000; // Padrão de 10 segundos
 
-                        if (!isNaN(delay) && delay > 0) {
-                            setTimeout(() => {
-                                sendRequest("PUT", `https://edusp-api.ip.tv/tms/task/${id}/answer/${task_id}`, send_anwsers_body, (response) => {
-                                    if (response.status !== 200) {
-                                        alert(`[ERROR] An error occurred while sending the answers. RESPONSE: ${response.responseText}`);
-                                    }
-                                    console.log(`[DEBUG] Answers Sent! RESPONSE: ${response.responseText}`);
+                        setTimeout(() => {
+                            sendRequest("PUT", `https://edusp-api.ip.tv/tms/task/${id}/answer/${task_id}`, send_anwsers_body, (response) => {
+                                if (response.status !== 200) {
+                                    alert(`[ERROR] An error occurred while sending the answers. RESPONSE: ${response.responseText}`);
+                                }
+                                console.log(`[DEBUG] Answers Sent! RESPONSE: ${response.responseText}`);
 
-                                    const watermark = document.querySelector('.MuiTypography-root.MuiTypography-body1.css-1exusee');
-                                    if (watermark) {
-                                        watermark.textContent = 'Made by iUnknown';
-                                        watermark.style.fontSize = '70px';
-                                        setTimeout(() => {
-                                            document.querySelector('button.MuiButtonBase-root.MuiButton-root.MuiLoadingButton-root.MuiButton-contained.MuiButton-containedInherit.MuiButton-sizeMedium.MuiButton-containedSizeMedium.MuiButton-colorInherit.css-prsfpd').click();
-                                        }, 500);
-                                    }
-                                });
-                            }, delay);
-                        } else {
-                            alert("Por favor, insira um tempo válido.");
-                        }
+                                const watermark = document.querySelector('.MuiTypography-root.MuiTypography-body1.css-1exusee');
+                                if (watermark) {
+                                    watermark.textContent = 'Made by iUnknown';
+                                    watermark.style.fontSize = '70px';
+                                }
+                            });
+                        }, delay);
+
+                        // Adiciona um botão para alterar a velocidade
+                        const speedButton = document.createElement('button');
+                        speedButton.textContent = 'Alterar Tempo de Finalização (ms)';
+                        speedButton.style.position = 'fixed';
+                        speedButton.style.top = '10px';
+                        speedButton.style.right = '10px';
+                        speedButton.style.zIndex = '9999';
+                        speedButton.style.padding = '10px';
+                        speedButton.style.backgroundColor = '#4CAF50';
+                        speedButton.style.color = 'white';
+                        speedButton.style.border = 'none';
+                        speedButton.style.borderRadius = '5px';
+                        document.body.appendChild(speedButton);
+
+                        speedButton.onclick = function() {
+                            const newDelay = prompt("Insira o novo tempo de finalização (em milissegundos):", "10000");
+                            if (newDelay !== null && !isNaN(newDelay) && newDelay > 0) {
+                                delay = parseInt(newDelay);
+                                alert(`Tempo de finalização alterado para ${delay} ms.`);
+                            } else {
+                                alert("Por favor, insira um tempo válido.");
+                            }
+                        };
                     });
                 });
             }
@@ -152,7 +168,7 @@
         subtree: true
     });
 
-    // Adicionando a telinha preta com texto e botão
+    // Adicionando a telinha preta com texto
     function createOverlay() {
         const overlay = document.createElement('div');
         overlay.style.position = 'fixed';
@@ -172,16 +188,15 @@
             <div style="text-align: center;">
                 <p>Entre no nosso Discord!</p>
                 <a href="https://discord.gg/2rqNgcZG66" target="_blank" style="display: inline-block; margin-top: 10px; padding: 10px 20px; background-color: #7289DA; color: white; text-decoration: none; border-radius: 5px;">Acessar Discord</a>
-                <button id="closeOverlay" style="margin-top: 20px; padding: 5px 10px; background-color: red; color: white; border: none; border-radius: 5px;">X</button>
             </div>
         `;
-        
+
         document.body.appendChild(overlay);
 
-        // Evento para fechar a telinha
-        document.getElementById('closeOverlay').onclick = function() {
+        // Fecha a telinha automaticamente após 10 segundos
+        setTimeout(() => {
             document.body.removeChild(overlay);
-        };
+        }, 10000);
     }
 
     // Chama a função para criar a telinha
